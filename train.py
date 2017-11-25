@@ -9,13 +9,22 @@ from keras.callbacks import History, TerminateOnNaN, TensorBoard, CSVLogger
 IMAGE_WIDTH = 300
 IMAGE_HEIGHT = 300
 
-dataset = Path("/home/ubuntu/face-yidi/transformed/images")
+dataset = Path("/app/transformed/images")
 character_classes = [d for d in dataset.iterdir() if d.is_dir()]
 dataSize = sum(len(list(c.glob('*.jpg'))) for c in character_classes)
 print(dataSize)
 
+NUM_OF_CLASSES = 58
+
 def train():
     model = Sequential()
+
+    model.add(Conv2D(32, (3, 3), input_shape=(IMAGE_WIDTH, IMAGE_HEIGHT, 3)))
+    model.add(Activation('relu'))
+    model.add(Conv2D(32, (3, 3), input_shape=(IMAGE_WIDTH, IMAGE_HEIGHT, 3)))
+    model.add(Activation('relu'))
+    model.add(MaxPooling2D(pool_size=(2, 2)))
+    model.add(Dropout(0.5))
 
     model.add(Conv2D(64, (3, 3), input_shape=(IMAGE_WIDTH, IMAGE_HEIGHT, 3)))
     model.add(Activation('relu'))
@@ -24,17 +33,10 @@ def train():
     model.add(MaxPooling2D(pool_size=(2, 2)))
     model.add(Dropout(0.5))
 
-    # model.add(Conv2D(32, (3, 3), input_shape=(IMAGE_WIDTH, IMAGE_HEIGHT, 3)))
-    # model.add(Activation('relu'))
-    # model.add(Conv2D(32, (3, 3), input_shape=(IMAGE_WIDTH, IMAGE_HEIGHT, 3)))
-    # model.add(Activation('relu'))
-    # model.add(MaxPooling2D(pool_size=(2, 2)))
-    # model.add(Dropout(0.5))
-
     model.add(Flatten())
     model.add(Dense(2048))
     model.add(Activation('sigmoid'))
-    model.add(Dense(57))
+    model.add(Dense(NUM_OF_CLASSES))
     model.add(Activation('sigmoid'))
 
     model.compile(
@@ -47,7 +49,7 @@ def train():
         ImageDataGenerator(rescale=1. / 255).flow_from_directory(
             directory='./transformed/images',
             target_size=(IMAGE_WIDTH, IMAGE_HEIGHT),
-            batch_size=20
+            batch_size=36
         ),
         # validation_data=ImageDataGenerator(rescale=1. / 255).flow_from_directory(
         #     directory='test',
@@ -56,7 +58,7 @@ def train():
         # ),
         # validation_steps=2,
         epochs=20,
-        steps_per_epoch=dataSize // 20,
+        steps_per_epoch=dataSize // 36,
         verbose=2,
         callbacks=[
             TerminateOnNaN(),
