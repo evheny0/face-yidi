@@ -3,6 +3,7 @@ import json
 import os
 import _thread
 import sys
+import time
 
 IMAGES_PATH = "./images"
 
@@ -30,7 +31,13 @@ def loadImages(name):
 def loadImagesBatch(name, folder, offset):
 	encodedName = request.pathname2url(name)
 	url = f"{BASIC_SEARCH_URL}&q={encodedName}&start={offset}"
-	response = json.loads(request.urlopen(url).read())
+	response = None
+	while not response:
+		try:
+			response = json.loads(request.urlopen(url).read())
+		except:
+			print("Request failed with error. Sleep for 30s.")
+			time.sleep(30)
 	for index, item in enumerate(response["items"]):
 		filename = f"{folder}/{index + offset}.jpg"
 		print(filename)
