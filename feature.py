@@ -104,7 +104,7 @@ file_list = [f for f in rootdir.glob('**/*') if f.is_file()]
 
 
 for filepath in file_list:
-  if filepath.suffix != '.jpeg' or filepath.suffix != '.jpg' or filepath.suffix != '.png':
+  if filepath.suffix != '.jpeg' and filepath.suffix != '.jpg' and filepath.suffix != '.png':
       continue
   initFolder("transformed/" + str(filepath.parents[0]))
   face_features(str(filepath))
