@@ -34,7 +34,10 @@ def loadImagesBatch(name, folder, offset):
 	for index, item in enumerate(response["items"]):
 		filename = f"{folder}/{index + offset}.jpg"
 		print(filename)
-		request.urlretrieve(item['link'], filename)
+		try:
+			request.urlretrieve(item['link'], filename)
+		except:
+			print(f"{filename} loading failed!")
 
 def initFolder(name):
 	nameFolderPath = f"{IMAGES_PATH}/{name}" 
