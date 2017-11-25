@@ -3,10 +3,16 @@ from keras.optimizers import RMSprop
 from keras.preprocessing.image import ImageDataGenerator
 from keras.layers import Dense, Conv2D, Flatten, Activation, MaxPooling2D, Dropout
 from keras.utils import plot_model
+from pathlib import Path
 from keras.callbacks import History, TerminateOnNaN, TensorBoard, CSVLogger
 
 IMAGE_WIDTH = 300
 IMAGE_HEIGHT = 300
+
+dataset = Path("./transformed/images")
+character_classes = [d for d in dataset.iterdir() if d.is_dir()]
+dataSize = sum(len(list(c.glob('*.jpg'))) for c in character_classes)
+print(dataSize)
 
 def train():
     model = Sequential()
@@ -50,7 +56,7 @@ def train():
         # ),
         # validation_steps=2,
         epochs=20,
-        steps_per_epoch=57000 // 16,
+        steps_per_epoch=dataSize // 20,
         verbose=2,
         callbacks=[
             TerminateOnNaN(),
