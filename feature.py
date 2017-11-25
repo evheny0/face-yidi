@@ -6,18 +6,19 @@ import os
 from pathlib import Path
 
 
-def initFolder(name):
-  if not os.path.exists(name):
-    os.makedirs(name)
-  return name;
+# def initFolder(name):
+#   if not os.path.exists(name):
+#     os.makedirs(name)
+#   return name;
+SIZE = 150
 
 def transform_name(filename):
   return "transformed/" + filename + ".png"
 
-def make_square(im, min_size=300):
+def make_square(im, min_size=SIZE):
     x, y = im.size
     size = max(min_size, x, y)
-    new_im = Image.new('RGBA', (size, size), (255, 255, 255, 255))
+    new_im = Image.new('RGBA', (size, size))
     new_im.paste(im, (int((size - x) / 2), int((size - y) / 2)))
     return new_im
 
@@ -39,7 +40,7 @@ def crop_image(filename):
   new_image.save(transform_name(filename))
 
 def scale_image(filename):
-  basewidth = 300
+  basewidth = SIZE
   img = Image.open(transform_name(filename))
   wpercent = (basewidth/float(img.size[0]))
   hsize = int((float(img.size[1])*float(wpercent)))
@@ -64,23 +65,23 @@ def face_features(filename):
 
         # d.polygon(face_landmarks['left_eyebrow'], fill=(0, 0, 0, 256))
         # d.polygon(face_landmarks['right_eyebrow'], fill=(0, 0, 0, 256))
-        d.line(face_landmarks['left_eyebrow'], fill=(0, 0, 0, 256), width=5)
-        d.line(face_landmarks['right_eyebrow'], fill=(0, 0, 0, 256), width=5)
+        d.line(face_landmarks['left_eyebrow'], fill=(0, 0, 0, 256), width=2)
+        d.line(face_landmarks['right_eyebrow'], fill=(0, 0, 0, 256), width=2)
 
         d.polygon(face_landmarks['top_lip'], fill=(0, 0, 0, 256))
         d.polygon(face_landmarks['bottom_lip'], fill=(0, 0, 0, 256))
-        d.line(face_landmarks['top_lip'], fill=(0, 0, 0, 256), width=5)
-        d.line(face_landmarks['bottom_lip'], fill=(0, 0, 0, 256), width=5)
+        d.line(face_landmarks['top_lip'], fill=(0, 0, 0, 256), width=2)
+        d.line(face_landmarks['bottom_lip'], fill=(0, 0, 0, 256), width=2)
 
-        d.line(face_landmarks['nose_bridge'], fill=(0, 0, 0, 256), width=5)
-        d.line(face_landmarks['nose_tip'], fill=(0, 0, 0, 256), width=5)
-        d.line(face_landmarks['chin'], fill=(0, 0, 0, 256), width=5)
+        d.line(face_landmarks['nose_bridge'], fill=(0, 0, 0, 256), width=2)
+        d.line(face_landmarks['nose_tip'], fill=(0, 0, 0, 256))
+        d.line(face_landmarks['chin'], fill=(0, 0, 0, 256), width=2)
 
         d.polygon(face_landmarks['left_eye'], fill=(0, 0, 0, 256))
         d.polygon(face_landmarks['right_eye'], fill=(0, 0, 0, 256))
 
-        d.line(face_landmarks['left_eye'] + [face_landmarks['left_eye'][0]], fill=(0, 0, 0, 256), width=5)
-        d.line(face_landmarks['right_eye'] + [face_landmarks['right_eye'][0]], fill=(0, 0, 0, 256), width=5)
+        d.line(face_landmarks['left_eye'] + [face_landmarks['left_eye'][0]], fill=(0, 0, 0, 256), width=2)
+        d.line(face_landmarks['right_eye'] + [face_landmarks['right_eye'][0]], fill=(0, 0, 0, 256), width=2)
 
         pil_image.save(transform_name(filename))
 
@@ -100,13 +101,15 @@ def face_features(filename):
 
 
 
-rootdir = Path(sys.argv[1])
-file_list = [f for f in rootdir.glob('**/*') if f.is_file()]
+# rootdir = Path(sys.argv[1])
+# file_list = [f for f in rootdir.glob('**/*') if f.is_file()]
 
 
-for filepath in file_list:
-  if filepath.suffix != '.jpeg' and filepath.suffix != '.jpg' and filepath.suffix != '.png':
-      continue
-  initFolder("transformed/" + str(filepath.parents[0]))
-  face_features(str(filepath))
+# for filepath in file_list:
+#   if filepath.suffix != '.jpeg' and filepath.suffix != '.jpg' and filepath.suffix != '.png':
+#       continue
+#   initFolder("transformed/" + str(filepath.parents[0]))
+#   face_features(str(filepath))
 
+
+face_features(sys.argv[1])
