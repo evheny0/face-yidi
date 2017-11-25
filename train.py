@@ -39,7 +39,7 @@ def train():
 
     model.fit_generator(
         ImageDataGenerator(rescale=1. / 255).flow_from_directory(
-            directory='images',
+            directory='./transformed/images',
             target_size=(IMAGE_WIDTH, IMAGE_HEIGHT),
             batch_size=20
         ),
