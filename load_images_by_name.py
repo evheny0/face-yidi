@@ -28,13 +28,12 @@ def loadImages(name):
 		offset = offset + API_BATCH_SIZE
 
 def loadImagesBatch(name, folder, offset):
-	encodedName = request.quote(name.encode('cp1251'))
+	encodedName = request.pathname2url(name)
 	url = f"{BASIC_SEARCH_URL}&q={encodedName}&start={offset}"
-	print(url)
 	response = json.loads(request.urlopen(url).read())
 	for index, item in enumerate(response["items"]):
 		filename = f"{folder}/{index + offset}.jpg"
-		print(filename, item['link'])
+		print(filename)
 		request.urlretrieve(item['link'], filename)
 
 def initFolder(name):
