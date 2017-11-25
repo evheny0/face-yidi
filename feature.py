@@ -101,15 +101,9 @@ def face_features(filename):
 
 
 
-# rootdir = Path(sys.argv[1])
-# file_list = [f for f in rootdir.glob('**/*') if f.is_file()]
 
 
-# for filepath in file_list:
-#   if filepath.suffix != '.jpeg' and filepath.suffix != '.jpg' and filepath.suffix != '.png':
-#       continue
-#   initFolder("transformed/" + str(filepath.parents[0]))
-#   face_features(str(filepath))
+file_list = sys.argv[1].split(" ")
+for filepath in file_list:
+  face_features(filepath)
 
-
-face_features(sys.argv[1])

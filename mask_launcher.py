@@ -4,8 +4,11 @@ import sys
 import os
 
 
-NAMES = ["Кирилл","Александр","Никита","Виталий","Павел","Дмитрий","Владимир","Станислав","Валентин","Алексей","Андрей","Олег","Руслан","Евгений","Анатолий","Вячеслав","Матвей","Илья","Максим","Виктор","Михаил","Геннадий","Владислав","Егор","Сергей","Антон","Артем","Ростислав","Юрий","Денис","Глеб","Вадим","Игорь","Георгий","Ян","Ярослав","Герман","Валерий","Борис","Иван","Давид","Даниил","Ирина","Алина","Антонина","Евгения","Наталья","Елена","Анна","Екатерина","Валентина","Ольга","Елизавета","Алена","Марина","Надежда","Ксения","Татьяна"]
-BATCH_SIZE = 10
+BATCH_SIZE = 1000
+
+def chunks(l, n):
+    n = max(1, n)
+    return (l[i:i+n] for i in range(0, len(l), n))
 
 def initFolder(name):
   if not os.path.exists(name):
@@ -15,10 +18,12 @@ def initFolder(name):
 
 rootdir = Path(sys.argv[1])
 file_list = [f for f in rootdir.glob('**/*') if f.is_file()]
+file_list = [f for f in file_list if (f.suffix == '.jpeg' or f.suffix == '.jpg' or f.suffix == '.png')]
 
 for filepath in file_list:
-  if filepath.suffix != '.jpeg' and filepath.suffix != '.jpg' and filepath.suffix != '.png':
-      continue
   initFolder(sys.argv[2] + str(filepath.parents[0]))
-  subprocess.Popen(["python", "feature.py", str(filepath)])
 
+file_list = [str(f) for f in file_list]
+
+for filepath in chunks(file_list, BATCH_SIZE):
+  subprocess.Popen(["python", "feature.py", " ".join(filepath)])
