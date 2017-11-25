@@ -66,7 +66,7 @@ def train():
         callbacks=[
             TerminateOnNaN(),
             # TensorBoard(log_dir='./logs', write_images=True),
-            # CSVLogger('./logs/log.txt', append = False)
+            CSVLogger('./logs/log.txt', append = False)
         ]
     )
 
