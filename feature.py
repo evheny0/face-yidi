@@ -2,7 +2,17 @@ from PIL import Image, ImageDraw
 import numpy as np
 import face_recognition
 import sys
+import os
+from pathlib import Path
 
+
+def initFolder(name):
+  if not os.path.exists(name):
+    os.makedirs(name)
+  return name;
+
+def transform_name(filename):
+  return "transformed/" + filename + ".png"
 
 def make_square(im, min_size=300):
     x, y = im.size
@@ -12,7 +22,7 @@ def make_square(im, min_size=300):
     return new_im
 
 def crop_image(filename):
-  image=Image.open("result_" + filename + ".png")
+  image=Image.open(transform_name(filename))
   image.load()
 
   image_data = np.asarray(image)
@@ -24,15 +34,15 @@ def crop_image(filename):
   image_data_new = image_data[cropBox[0]:cropBox[1]+1, cropBox[2]:cropBox[3]+1 , :]
 
   new_image = Image.fromarray(image_data_new)
-  new_image.save("result_" + filename + ".png")
+  new_image.save(transform_name(filename))
 
 def scale_image(filename):
   basewidth = 300
-  img = Image.open("result_" + filename + ".png")
+  img = Image.open(transform_name(filename))
   wpercent = (basewidth/float(img.size[0]))
   hsize = int((float(img.size[1])*float(wpercent)))
   img = img.resize((basewidth,hsize), Image.ANTIALIAS)
-  img.save("result_" + filename + ".png") 
+  img.save(transform_name(filename)) 
 
 def face_features(filename):
     # Load the jpg file into a numpy array
@@ -51,10 +61,10 @@ def face_features(filename):
         pil_image = Image.new('RGBA', (len(image), len(image[0])))
         d = ImageDraw.Draw(pil_image, 'RGBA')
 
-        d.polygon(face_landmarks['left_eyebrow'], fill=(0, 0, 0, 256))
-        d.polygon(face_landmarks['right_eyebrow'], fill=(0, 0, 0, 256))
-        d.line(face_landmarks['left_eyebrow'], fill=(0, 0, 0, 256))
-        d.line(face_landmarks['right_eyebrow'], fill=(0, 0, 0, 256))
+        # d.polygon(face_landmarks['left_eyebrow'], fill=(0, 0, 0, 256))
+        # d.polygon(face_landmarks['right_eyebrow'], fill=(0, 0, 0, 256))
+        d.line(face_landmarks['left_eyebrow'], fill=(0, 0, 0, 256), width=5)
+        d.line(face_landmarks['right_eyebrow'], fill=(0, 0, 0, 256), width=5)
 
         d.polygon(face_landmarks['top_lip'], fill=(0, 0, 0, 256))
         d.polygon(face_landmarks['bottom_lip'], fill=(0, 0, 0, 256))
@@ -71,7 +81,7 @@ def face_features(filename):
         d.line(face_landmarks['left_eye'] + [face_landmarks['left_eye'][0]], fill=(0, 0, 0, 256), width=5)
         d.line(face_landmarks['right_eye'] + [face_landmarks['right_eye'][0]], fill=(0, 0, 0, 256), width=5)
 
-        pil_image.save("result_" + filename + ".png")
+        pil_image.save(transform_name(filename))
 
 
 
@@ -84,12 +94,18 @@ def face_features(filename):
     scale_image(filename)
     ######
 
-    image=Image.open("result_" + filename + ".png")
-    make_square(image).save("result_" + filename + ".png")
+    image=Image.open(transform_name(filename))
+    make_square(image).save(transform_name(filename))
 
 
 
-filename = sys.argv[1]
+rootdir = Path(sys.argv[1])
+file_list = [f for f in rootdir.glob('**/*') if f.is_file()]
 
 
-face_features(filename)
+for filepath in file_list:
+  if filepath.suffix != '.jpeg' or filepath.suffix != '.jpg' or filepath.suffix != '.png':
+      continue
+  initFolder("transformed/" + str(filepath.parents[0]))
+  face_features(str(filepath))
+
