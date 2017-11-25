@@ -6,35 +6,37 @@ from keras.utils import plot_model
 from pathlib import Path
 from keras.callbacks import History, TerminateOnNaN, TensorBoard, CSVLogger
 
-IMAGE_WIDTH = 300
-IMAGE_HEIGHT = 300
+IMAGE_WIDTH = 150
+IMAGE_HEIGHT = 150
 
-dataset = Path("/app/transformed/images")
+dataset = Path("./transformed/images")
 character_classes = [d for d in dataset.iterdir() if d.is_dir()]
-dataSize = sum(len(list(c.glob('*.jpg'))) for c in character_classes)
+dataSize = sum(len(list(c.glob('*.png'))) for c in character_classes)
 print(dataSize)
+
+dataSize = 3132
 
 NUM_OF_CLASSES = 58
 
 def train():
     model = Sequential()
 
-    model.add(Conv2D(32, (3, 3), input_shape=(IMAGE_WIDTH, IMAGE_HEIGHT, 3)))
+    model.add(Conv2D(16, (5, 5), input_shape=(IMAGE_WIDTH, IMAGE_HEIGHT, 3)))
     model.add(Activation('relu'))
-    model.add(Conv2D(32, (3, 3), input_shape=(IMAGE_WIDTH, IMAGE_HEIGHT, 3)))
+    model.add(Conv2D(16, (5, 5), input_shape=(IMAGE_WIDTH, IMAGE_HEIGHT, 3)))
     model.add(Activation('relu'))
     model.add(MaxPooling2D(pool_size=(2, 2)))
     model.add(Dropout(0.5))
 
-    model.add(Conv2D(64, (3, 3), input_shape=(IMAGE_WIDTH, IMAGE_HEIGHT, 3)))
-    model.add(Activation('relu'))
-    model.add(Conv2D(64, (3, 3), input_shape=(IMAGE_WIDTH, IMAGE_HEIGHT, 3)))
-    model.add(Activation('relu'))
-    model.add(MaxPooling2D(pool_size=(2, 2)))
-    model.add(Dropout(0.5))
+    # model.add(Conv2D(64, (3, 3), input_shape=(IMAGE_WIDTH, IMAGE_HEIGHT, 3)))
+    # model.add(Activation('relu'))
+    # model.add(Conv2D(64, (3, 3), input_shape=(IMAGE_WIDTH, IMAGE_HEIGHT, 3)))
+    # model.add(Activation('relu'))
+    # model.add(MaxPooling2D(pool_size=(2, 2)))
+    # model.add(Dropout(0.5))
 
     model.add(Flatten())
-    model.add(Dense(2048))
+    model.add(Dense(1024))
     model.add(Activation('sigmoid'))
     model.add(Dense(NUM_OF_CLASSES))
     model.add(Activation('sigmoid'))
