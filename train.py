@@ -9,7 +9,7 @@ from keras.callbacks import History, TerminateOnNaN, TensorBoard, CSVLogger
 IMAGE_WIDTH = 300
 IMAGE_HEIGHT = 300
 
-dataset = Path("./transformed/images")
+dataset = Path("/home/ubuntu/face-yidi/transformed/images")
 character_classes = [d for d in dataset.iterdir() if d.is_dir()]
 dataSize = sum(len(list(c.glob('*.jpg'))) for c in character_classes)
 print(dataSize)
