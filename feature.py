@@ -53,8 +53,7 @@ def face_features(filename):
 
     if len(face_landmarks_list) == 0:
       print("No face detected")
-      sys.exit()
-      pass
+      return
 
     for face_landmarks in face_landmarks_list:
         # pil_image = Image.fromarray(image)
