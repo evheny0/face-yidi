@@ -7,7 +7,7 @@ import test_single
 import sys
 from flask import json
 
-app = Flask("hackleta")
+app = Flask(__name__)
 
 @app.route("/", methods=['GET'])
 def index():
