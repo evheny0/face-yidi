@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta content="stuff, to, help, search, engines, not" name="keywords">
+<meta content="What this page is about." name="description">
+<meta content="Display Webcam Stream" name="title">
+<script
+  src="https://code.jquery.com/jquery-3.2.1.min.js"
+  integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+  crossorigin="anonymous"></script>
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+<title>Я знаю, как тебя зовут</title>
+  
+<style>
+body,html{
+    height:100%;
+}
+body {
+    background-color: black;
+}
+h1 {
+    color: white;
+    margin-top: 20px;
+}
+.progress {
+    margin-top: 20px;
+    height: 35px;
+}
+.progress-bar {
+    font-size: 1.5rem;
+}
+.action-btn {
+    margin-top: 20px;
+}
+</style>
+</head>
+  
+<body>
+<div class="container h-100">
+  <div class="row h-100 justify-content-center align-items-cent">
+       
+    <h1 class="text-center"> 
+        Привет. Это хак лета.
+    </h1> 
+
+    <div id="video-block">    
+        <video id="video" width="640" height="480" autoplay></video>
+        <div class="row justify-content-center">
+            <button id="snap" class="btn btn-info btn-lg action-btn">Как меня зовут?</button>
+        </div>
+    </div>
+
+    <div id="result-block" style="display: none;">
+        <canvas id="canvas" width="640" height="480"></canvas>
+        <div class="row justify-content-center">
+            <button id="back" class="btn btn-default btn-lg action-btn">Хочу ещё разок!</button>
+        </div>
+
+        <div class="results">
+            <div class="progress">
+                <div class="progress-bar bg-success progress-bar-striped" role="progressbar" aria-valuenow="70" id="name-0"
+                aria-valuemin="0" aria-valuemax="100" style="width:100%">
+                Егор 
+                </div>
+            </div> 
+            <div class="progress">
+                <div class="progress-bar bg-info progress-bar-striped" role="progressbar" aria-valuenow="70" id="name-1"
+                aria-valuemin="0" aria-valuemax="100" style="width:80%">
+                4% (Семен)
+                </div>
+            </div> 
+            <div class="progress">
+                <div class="progress-bar bg-info progress-bar-striped" role="progressbar" aria-valuenow="70" id="name-2"
+                aria-valuemin="0" aria-valuemax="100" style="width:60%">
+                3% (Анна)
+                </div>
+            </div> 
+            <div class="progress">
+                <div class="progress-bar bg-info progress-bar-striped" role="progressbar" aria-valuenow="70" id="name-3"
+                aria-valuemin="0" aria-valuemax="100" style="width:60%">
+                3% (Анна)
+                </div>
+            </div> 
+            <div class="progress">
+                <div class="progress-bar bg-danger progress-bar-striped" role="progressbar" aria-valuenow="70" id="name-4"
+                aria-valuemin="0" aria-valuemax="100" style="width:40%">
+                2% (Игорь)
+                </div>
+            </div> 
+        </div>
+    </div>  
+
+  </div>
+
+</div>
+<script>
+    const video = document.querySelector("#video");
+    const canvas = document.querySelector('#canvas');
+    const context = canvas.getContext('2d');
+    const name = document.querySelector('#name');
+
+    const URL = 'http://13.59.222.157:8080/image';
+    // const URL = 'http://google.com';
+ 
+    navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia || navigator.oGetUserMedia;
+ 
+    if (navigator.getUserMedia) {       
+        navigator.getUserMedia({video: true}, handleVideo, videoError);
+    }
+
+    document.getElementById("snap").addEventListener("click", function() {
+        context.drawImage(video, 0, 0, 640, 480);
+        sendImage(canvas.toDataURL());
+        toggleBlocks();
+    });
+
+    document.getElementById("back").addEventListener("click", function() {
+        toggleBlocks();
+    });
+
+
+    function sendImage(image){
+        $.ajax({
+            'url'      : URL,
+            'type'     : 'post',
+            'data'     : {'image' : image},
+            'success'  : function(response) {
+                console.log('Successful request');
+            }
+        }).fail(function(xhr, err) {
+            console.error(err);
+        });
+
+        // var formData  = new FormData();
+        // formData.append('image', image)
+        // var myInit = { method: 'GET', body: formData};
+        // fetch(URL, myInit).then(function(response) {
+        //     console.log("ok")
+        //     return response;
+        // }).then(function(myBlob) {
+        //     name.innerHTML = "Volodya"
+        // }).catch(function(error) {
+        //     displayResult(error);
+        // })
+    }
+ 
+    function handleVideo(stream) {
+        video.src = window.URL.createObjectURL(stream);
+        video.play();
+    }
+ 
+    function videoError(e) {
+        // do something
+    }
+
+    function toggleBlocks() {
+        toggleVisibility('video-block')
+        toggleVisibility('result-block')
+    }
+
+    function toggleVisibility(id) {
+        const elementStyle = document.getElementById(id).style
+        const currentState = elementStyle.display
+        const newState = currentState === 'none' ? 'block' : 'none'
+        elementStyle.display = newState
+    }
+
+    function displayResult(results) {
+        results = {"Сергей": 5, "Иван": 4, "Саша": 4, "Ваня": 2.5, "Егор": 2.4}
+        i = 0;
+        quantum = 0;
+        width = 0;
+        for (var name in results) {
+            if (results.hasOwnProperty(name)) {
+                currentValue = results[name];
+                if(i == 0) {
+                    quantum = 100 / results[name];
+                    width = 100;
+                } else {
+                    width = currentValue * quantum;
+                }
+                const item = document.querySelector('#name-' + i);
+                item.style.width = width + '%';
+                item.innerHTML = name + ": " + currentValue + "%"
+                i++;
+            }
+        }
+    }
+ 
+</script>
+</body>
+</html>
