@@ -1,17 +1,53 @@
 import sys
 from keras import models
 from keras.preprocessing.image import ImageDataGenerator, array_to_img, img_to_array, load_img
+from PIL import Image, ImageDraw
+import face_recognition
+import cv2
+import numpy as np
+
 
 model = models.load_model('model.h5')
 
+
+SIZE = 150
+
+def scale_image(filename):
+  basewidth = SIZE
+  img = Image.open(filename)
+  wpercent = (basewidth/float(img.size[0]))
+  hsize = int((float(img.size[1])*float(wpercent)))
+  img = img.resize((basewidth,hsize), Image.ANTIALIAS)
+  img.save(filename) 
+
+def find_faces(filename):
+  image = face_recognition.load_image_file(filename)
+  face_locations = face_recognition.face_locations(image)
+
+  if (not face_locations.any()):
+    return False
+
+  top, right, bottom, left = face_locations[0]
+  face_image = image[top:bottom, left:right]
+  pil_image = Image.fromarray(face_image)
+  pil_image.save(filename)
+  scale_image(filename)
+  img = cv2.imread(filename, 0)
+  clahe = cv2.createCLAHE(clipLimit=5.0, tileGridSize=(8,8))
+  cl1 = clahe.apply(img)
+  cv2.imwrite(filename, cl1)
+
+  return True
+
+
 def testImage(imagePath):
-	print(f"Load image from {imagePath}")
-	image = load_img(imagePath)
-	print("Loaded")
-	imageArray = img_to_array(image)
-	print("Converted to array")
-	predictions = model.predict(imageArray)
-	return predictions
+  print("Prepare image")
+  if not find_faces(imagePath):
+    return None
+
+	imageArray = np.array([np.array(Image.open(imagePath))]) * (1.0 / 255.0)
+  predictions = model.predict(imageArray, 1, 1, 1)
+  return predictions
 
 if __name__ == '__main__':
 	test()
