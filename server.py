@@ -19,7 +19,8 @@ def processImage():
 		return predictions
 	except:
 		e = sys.exc_info()[0]
-		return e
+		print(e)
+	return "Error"
 
 
 if __name__ == "__main__":
