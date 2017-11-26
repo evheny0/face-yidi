@@ -4,6 +4,10 @@ import face_recognition
 import sys
 import os
 from pathlib import Path
+import cv2
+import numpy as np
+from matplotlib import pyplot as plt
+
 
 
 # def initFolder(name):
@@ -13,7 +17,7 @@ from pathlib import Path
 SIZE = 150
 
 def transform_name(filename):
-  return "tr2/" + filename + ".png"
+  return "tr3/" + filename + ".png"
 
 def make_square(im, min_size=SIZE):
     x, y = im.size
@@ -117,6 +121,14 @@ def find_faces(filename):
         pil_image.save(transform_name(filename))
         scale_image(filename)
 
+        # TO GRAYSCALE
+        img = cv2.imread(transform_name(filename), 0)
+        
+        # create a CLAHE object (Arguments are optional).
+        clahe = cv2.createCLAHE(clipLimit=5.0, tileGridSize=(8,8))
+        cl1 = clahe.apply(img)
+        
+        cv2.imwrite(transform_name(filename), cl1)
 
 
 # rootdir = Path(sys.argv[1])
