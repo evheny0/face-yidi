@@ -1,4 +1,5 @@
 import sys
+import keras
 from keras import models
 from keras.preprocessing.image import ImageDataGenerator, array_to_img, img_to_array, load_img
 from PIL import Image, ImageDraw
@@ -18,13 +19,13 @@ def scale_image(filename):
   wpercent = (basewidth/float(img.size[0]))
   hsize = int((float(img.size[1])*float(wpercent)))
   img = img.resize((basewidth,hsize), Image.ANTIALIAS)
-  img.save(filename) 
+  img.save(filename)
 
 def find_faces(filename):
   image = face_recognition.load_image_file(filename)
   face_locations = face_recognition.face_locations(image)
 
-  if (not face_locations.any()):
+  if len(face_locations) < 1:
     return False
 
   top, right, bottom, left = face_locations[0]
@@ -45,12 +46,16 @@ def testImage(imagePath):
 		return None
 
 	print("Prepare done")
-	imageArray = np.array([np.array(Image.open(imagePath))]) * (1.0 / 255.0)
+	Image.open(imagePath).resize((150, 150)).save(imagePath, 'PNG')
+	img = Image.open(imagePath).convert('RGB')
+	imageArray = np.array([np.array(img)]) * (1.0 / 255.0)
 	print("Predict...")
-	predictions = model.predict(imageArray, 1, 1, 1)
+	predictions = model.predict_proba(imageArray)
 	return predictions
 
 if __name__ == '__main__':
-	test()
+	predictions = testImage('./uploaded/f244b16d-3fb5-4972-8a2b-6a1593a3f753.png')
+	# classses = keras.np_utils.probas_to_classes(predictions)
+	print(predictions)
 
 
