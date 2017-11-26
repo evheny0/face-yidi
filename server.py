@@ -9,11 +9,16 @@ app = Flask("hashleta")
 @app.route("/image", methods=['POST'])
 def processImage():
 	print('request received')
-	image = request.files['image']
-	filePath = f'./uploaded/{str(uuid.uuid4())}.jpg'
-	image.save(filePath)
-	predictions = test_single.testImage(filePath)
-	return predictions
+	try:
+		image = request.files['image']
+		filePath = f'./uploaded/{str(uuid.uuid4())}.jpg'
+		image.save(filePath)
+		predictions = test_single.testImage(filePath)
+		return predictions
+	except:
+		e = sys.exc_info()[0]
+		return e
+
 
 if __name__ == "__main__":
 	app.run(host='0.0.0.0', port=8080)
