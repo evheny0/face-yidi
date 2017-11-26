@@ -11,7 +11,7 @@ IMAGE_WIDTH = 150
 IMAGE_HEIGHT = 150
 
 PATH = sys.argv[1]
-FULL_PATH = PATH + "/images"
+FULL_PATH = PATH + "/images2"
 MODEL_PATH = "model.h5"
 
 dataset = Path(FULL_PATH)
@@ -21,7 +21,7 @@ print(dataSize)
 
 dataSize = 3132
 
-NUM_OF_CLASSES = 58
+# NUM_OF_CLASSES = 58
 
 def train():
     model = Sequential()
