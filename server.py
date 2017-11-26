@@ -1,5 +1,6 @@
 from flask import Flask
 from flask import request
+from flask import jsonify
 import uuid
 import base64
 import test_single
@@ -21,7 +22,7 @@ def processImage():
 		if not predictions:
 			return "Face not found"
 		print(predictions)
-		return predictions
+		return jsonify(predictions)
 	except:
 		e = sys.exc_info()[0]
 		print(e)
