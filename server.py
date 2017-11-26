@@ -18,7 +18,6 @@ def processImage():
 	print('request received')
 	try:
 		image = request.form['image']
-		# print(image)
 		imageData = base64.b64decode(image.split(',')[1])
 		filePath = f'./uploaded/{str(uuid.uuid4())}.png'
 		with open(filePath, 'wb') as fh:
@@ -27,12 +26,10 @@ def processImage():
 		if not predictions:
 			return "Face not found"
 		print(predictions)
-		# response = app.response_class(
-	 #        response=json.dumps(data),
-	 #        status=200,
-	 #        mimetype='application/json'
-	 #    )
-		return str(predictions)
+	 	result = []
+	 	for key, value in sorted(predictions.iteritems(), key=lambda k,v: (v, k))[:10]:
+    		result.apped({key: value})
+		return str(result)
 	except:
 		e = sys.exc_info()[0]
 		print(e)
