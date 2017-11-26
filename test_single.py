@@ -15,8 +15,8 @@ def inverse_dict(d):
 
 data_generator = ImageDataGenerator(rescale=1. / 255)
 classes = inverse_dict(data_generator.flow_from_directory(
-        directory=path,
-        target_size=(main.IMAGE_WIDTH, main.IMAGE_HEIGHT),
+        directory='./tr3/images2',
+        target_size=(150, 150),
         batch_size=1,
         class_mode='categorical'
     ).class_indices)
