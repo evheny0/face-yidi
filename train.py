@@ -4,12 +4,17 @@ from keras.preprocessing.image import ImageDataGenerator
 from keras.layers import Dense, Conv2D, Flatten, Activation, MaxPooling2D, Dropout
 from keras.utils import plot_model
 from pathlib import Path
-from keras.callbacks import History, TerminateOnNaN, TensorBoard, CSVLogger
+from keras.callbacks import History, TerminateOnNaN, TensorBoard, CSVLogger, ModelCheckpoint
+import sys
 
 IMAGE_WIDTH = 150
 IMAGE_HEIGHT = 150
 
-dataset = Path("./transformed/images")
+PATH = sys.argv[1]
+FULL_PATH = PATH + "/images"
+MODEL_PATH = "model.h5"
+
+dataset = Path(FULL_PATH)
 character_classes = [d for d in dataset.iterdir() if d.is_dir()]
 dataSize = sum(len(list(c.glob('*.png'))) for c in character_classes)
 print(dataSize)
@@ -50,7 +55,7 @@ def train():
 
     model.fit_generator(
         ImageDataGenerator(rescale=1. / 255).flow_from_directory(
-            directory='./transformed/images',
+            directory=FULL_PATH,
             target_size=(IMAGE_WIDTH, IMAGE_HEIGHT),
             batch_size=36
         ),
@@ -66,11 +71,12 @@ def train():
         callbacks=[
             TerminateOnNaN(),
             # TensorBoard(log_dir='./logs', write_images=True),
-            CSVLogger('./logs/log.txt', append = False)
+            CSVLogger('./logs/log.txt', append = False),
+            ModelCheckpoint("checkpoint_" + MODEL_PATH, monitor='val_acc', verbose=1, save_best_only=True, save_weights_only=False, mode='max', period=1)
         ]
     )
 
-    model.save('model.h5')
+    model.save(MODEL_PATH)
     # plot_model(model, 'model.png', show_shapes=True)
 
 if __name__ == '__main__':
