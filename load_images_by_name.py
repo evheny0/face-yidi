@@ -5,7 +5,7 @@ import _thread
 import sys
 import time
 
-IMAGES_PATH = "./images"
+IMAGES_PATH = "./images2"
 
 API_URL = "https://www.googleapis.com/customsearch/v1"
 API_KEY = "AIzaSyCl1UzajNrpvya3dCGVvECTtMHiCKiGOIw"
@@ -16,7 +16,7 @@ API_BATCH_SIZE = 10
 API_IMAGE_SIZE = "medium"
 BASIC_SEARCH_URL = f"{API_URL}?key={API_KEY}&cx={API_CX_KEY}&searchType={API_SEARCH_TYPE}&imageType={API_IMAGE_TYPE}&num={API_BATCH_SIZE}&imageSize={API_IMAGE_SIZE}"
 
-TOTAL_IMAGES = 100
+TOTAL_IMAGES = 50
 
 NAMES = sys.argv[1].split(" ")
 
