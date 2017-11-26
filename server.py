@@ -5,7 +5,7 @@ import uuid
 import base64
 import test_single
 import sys
-import json
+from flask import json
 
 app = Flask("hackleta")
 
@@ -27,7 +27,12 @@ def processImage():
 		if not predictions:
 			return "Face not found"
 		print(predictions)
-		return json.dumps(predictions)
+		response = app.response_class(
+	        response=json.dumps(data),
+	        status=200,
+	        mimetype='application/json'
+	    )
+		return response
 	except:
 		e = sys.exc_info()[0]
 		print(e)
