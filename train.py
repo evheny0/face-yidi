@@ -72,7 +72,7 @@ def train():
             TerminateOnNaN(),
             # TensorBoard(log_dir='./logs', write_images=True),
             CSVLogger('./logs/log.txt', append = False),
-            ModelCheckpoint("checkpoint_" + MODEL_PATH, monitor='val_acc', verbose=1, save_best_only=True, save_weights_only=False, mode='max', period=1)
+            ModelCheckpoint("checkpoint_" + MODEL_PATH, monitor='acc', verbose=1, save_best_only=True, save_weights_only=False, mode='max', period=1)
         ]
     )
 
