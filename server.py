@@ -27,12 +27,12 @@ def processImage():
 		if not predictions:
 			return "Face not found"
 		print(predictions)
-		response = app.response_class(
-	        response=json.dumps(data),
-	        status=200,
-	        mimetype='application/json'
-	    )
-		return response
+		# response = app.response_class(
+	 #        response=json.dumps(data),
+	 #        status=200,
+	 #        mimetype='application/json'
+	 #    )
+		return str(predictions)
 	except:
 		e = sys.exc_info()[0]
 		print(e)
