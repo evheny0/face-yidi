@@ -10,6 +10,18 @@ import numpy as np
 
 model = models.load_model('model.h5')
 
+def inverse_dict(d):
+    return {v: k for k, v in d.items()}
+
+data_generator = ImageDataGenerator(rescale=1. / 255)
+classes = inverse_dict(data_generator.flow_from_directory(
+        directory=path,
+        target_size=(main.IMAGE_WIDTH, main.IMAGE_HEIGHT),
+        batch_size=1,
+        class_mode='categorical'
+    ).class_indices)
+
+
 
 SIZE = 150
 
@@ -50,7 +62,7 @@ def testImage(imagePath):
 	img = Image.open(imagePath).convert('RGB')
 	imageArray = np.array([np.array(img)]) * (1.0 / 255.0)
 	print("Predict...")
-	predictions = model.predict_proba(imageArray)
+	predictions = model.predict(imageArray)
 	return predictions
 
 if __name__ == '__main__':
