@@ -8,7 +8,6 @@ def testImage(imagePath):
     image = load_img(imagePath)
     imageArray = img_to_array(image)
     predictions = model.predict(imageArray)
-    print(predictions)
     return predictions
 
 if __name__ == '__main__':
