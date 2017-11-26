@@ -11,7 +11,7 @@ app = Flask("hashleta")
 def processImage():
 	print('request received')
 	try:
-		image = request.form.image
+		image = request.get_json()
 		print(image)
 		imageData = base64.decodebytes(image.split(' ')[1])
 		filePath = f'./uploaded/{str(uuid.uuid4())}.png'
