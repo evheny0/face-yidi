@@ -26,9 +26,9 @@ def processImage():
 		if not predictions:
 			return "Face not found"
 		print(predictions)
-	 	result = []
-	 	for key, value in sorted(predictions.iteritems(), key=lambda k,v: (v, k))[:10]:
-    		result.apped({key: value})
+		result = []
+		for key, value in sorted(predictions.iteritems(), key=lambda k,v: (v, k))[:10]:
+			result.apped({key: value})
 		return str(result)
 	except:
 		e = sys.exc_info()[0]
