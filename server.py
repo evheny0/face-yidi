@@ -8,6 +8,10 @@ import json
 
 app = Flask("hackleta")
 
+@app.route("/", methods=['GET'])
+def index():
+	return render_template('index.html')
+
 @app.route("/image", methods=['POST'])
 def processImage():
 	print('request received')
