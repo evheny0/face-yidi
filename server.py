@@ -27,7 +27,7 @@ def processImage():
 			return "Face not found"
 		print(predictions)
 		result = []
-		for key, value in sorted(predictions.iteritems(), key=lambda k,v: (v, k))[:10]:
+		for key, value in sorted(predictions.items(), key=lambda item: item[1], reverse=True)[:10]:
 			result.apped({key: value})
 		return str(result)
 	except:
