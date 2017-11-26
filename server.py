@@ -3,6 +3,7 @@ from flask import request
 import uuid
 import base64
 import test_single
+import sys
 
 app = Flask("hashleta")
 
@@ -11,6 +12,7 @@ def processImage():
 	print('request received')
 	try:
 		image = request.files['image']
+		print(image)
 		filePath = f'./uploaded/{str(uuid.uuid4())}.jpg'
 		image.save(filePath)
 		predictions = test_single.testImage(filePath)
