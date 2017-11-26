@@ -28,7 +28,7 @@ def processImage():
 		print(predictions)
 		result = []
 		for key, value in sorted(predictions.items(), key=lambda item: item[1], reverse=True)[:10]:
-			result.apped({key: value})
+			result.append({key: value})
 		return str(result)
 	except:
 		e = sys.exc_info()[0]
