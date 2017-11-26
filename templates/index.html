@@ -6,6 +6,7 @@
 <meta content="What this page is about." name="description">
 <meta content="Display Webcam Stream" name="title">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <title>Я знаю, как тебя зовут</title>
   
 <style>
@@ -118,16 +119,30 @@ h1 {
 
 
     function sendImage(image){
-        var formData  = new FormData();
-        formData.append('image', image)
-        var myInit = { method: 'POST', body: formData};
-        fetch(URL, myInit).then(function(response) {
+        // var formData  = new FormData();
+        formData = {'image': image}
+        
+        $.ajax(URL, {
+            method: 'POST',
+            data: formData,
+            mode: 'no-cors',
+            // dataType: 'text json',
+            // contentType: 'application/json; charset=utf-8',
+            // headers: {
+            //     Accept: 'application/json',
+            //   },
+        })
+        .done(function(response) {
             console.log("ok")
+            console.log(response.data)
+            displayResult(JSON.stringify(response.data)); 
+            
             return response;
-        }).then(function(myBlob) {
-            name.innerHTML = "Volodya"
-        }).catch(function(error) {
-            displayResult(error);
+        })
+        .fail(function(error) {
+            console.log("fail")
+            console.log(error)
+            displayResult(JSON.stringify(response));
         })
     }
  
@@ -153,24 +168,22 @@ h1 {
     }
 
     function displayResult(results) {
-        results = {"Сергей": 5, "Иван": 4, "Саша": 4, "Ваня": 2.5, "Егор": 2.4}
         i = 0;
         quantum = 0;
         width = 0;
-        for (var name in results) {
-            if (results.hasOwnProperty(name)) {
-                currentValue = results[name];
-                if(i == 0) {
-                    quantum = 100 / results[name];
-                    width = 100;
-                } else {
-                    width = currentValue * quantum;
-                }
-                const item = document.querySelector('#name-' + i);
-                item.style.width = width + '%';
-                item.innerHTML = name + ": " + currentValue + "%"
-                i++;
+        for (var i = 0; i < 5; i++) {
+            var person = results[i];
+            const currentValue = person.value;
+            const name = person.name;
+            if(i == 0) {
+                quantum = 100 / currentValue;
+                width = 100;
+            } else {
+                width = currentValue * quantum;
             }
+            const item = document.querySelector('#name-' + i);
+            item.style.width = width + '%';
+            item.innerHTML = name + ": " + currentValue + "%";
         }
         displayImageBox(true);
     }
