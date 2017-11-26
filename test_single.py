@@ -62,11 +62,14 @@ def testImage(imagePath):
 	img = Image.open(imagePath).convert('RGB')
 	imageArray = np.array([np.array(img)]) * (1.0 / 255.0)
 	print("Predict...")
-	predictions = model.predict(imageArray)
-	return predictions
+	predictions = model.predict(imageArray)[0]
+	result = {}
+	for i in range(len(predictions)):
+		result[classes[i]] = predictions[i]
+	return result
 
 if __name__ == '__main__':
-	predictions = testImage('./uploaded/f244b16d-3fb5-4972-8a2b-6a1593a3f753.png')
+	predictions = testImage('./uploaded/00ad57d9-470e-46a1-b4a1-79ac8f59a12e.png')
 	# classses = keras.np_utils.probas_to_classes(predictions)
 	print(predictions)
 
