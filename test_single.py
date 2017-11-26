@@ -44,7 +44,9 @@ def testImage(imagePath):
 	if not find_faces(imagePath):
 		return None
 
+	print("Prepare done")
 	imageArray = np.array([np.array(Image.open(imagePath))]) * (1.0 / 255.0)
+	print("Predict...")
 	predictions = model.predict(imageArray, 1, 1, 1)
 	return predictions
 
