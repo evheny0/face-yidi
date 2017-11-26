@@ -5,10 +5,11 @@
 <meta content="stuff, to, help, search, engines, not" name="keywords">
 <meta content="What this page is about." name="description">
 <meta content="Display Webcam Stream" name="title">
-<title>Name recognizer</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<title>Name</title>
   
 <style>
-#container {
+/*#container {
     margin: 0px auto;
     width: 500px;
     height: 375px;
@@ -18,32 +19,83 @@
     width: 500px;
     height: 375px;
     background-color: #666;
-}
+}*/
 </style>
 </head>
   
 <body>
-<div id="container">
-    <video autoplay="true" id="videoElement">
-     
-    </video>
+<div id="container container-fluid">
+
+    <h1> 
+        Hi there. Welcome to name recognition.
+    </h1>
+
+    <div id="video-block">    
+        <video id="video" width="640" height="480" autoplay></video>
+        <button id="snap">What is my name?</button>
+    </div>
+
+    <div id="result-block" style="display: none;">
+        <canvas id="canvas" width="640" height="480"></canvas>
+        <button id="back">Back to video</button>
+    </div>  
+
 </div>
 <script>
-    var video = document.querySelector("#videoElement");
+    const video = document.querySelector("#video");
+    const canvas = document.querySelector('#canvas');
+    const context = canvas.getContext('2d');
+
+    const URL = 'http://13.59.222.157:8080/image';
  
-navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia || navigator.oGetUserMedia;
+    navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia || navigator.oGetUserMedia;
  
-if (navigator.getUserMedia) {       
-    navigator.getUserMedia({video: true}, handleVideo, videoError);
-}
+    if (navigator.getUserMedia) {       
+        navigator.getUserMedia({video: true}, handleVideo, videoError);
+    }
+
+    document.getElementById("snap").addEventListener("click", function() {
+        context.drawImage(video, 0, 0, 640, 480);
+        sendImage(canvas.toDataURL());
+        toggleBlocks();
+    });
+
+    document.getElementById("back").addEventListener("click", function() {
+        toggleBlocks();
+    });
+
+
+    function sendImage(image){
+        var formData  = new FormData();
+        formData.append('image', image)
+        var myInit = { method: 'POST', body: formData};
+        fetch(URL, myInit).then(function(response) {
+          return response.blob();
+        }).then(function(myBlob) {
+          // var objectURL = URL.createObjectURL(myBlob);
+        });
+    }
  
-function handleVideo(stream) {
-    video.src = window.URL.createObjectURL(stream);
-}
+    function handleVideo(stream) {
+        video.src = window.URL.createObjectURL(stream);
+        video.play();
+    }
  
-function videoError(e) {
-    // do something
-}
+    function videoError(e) {
+        // do something
+    }
+
+    function toggleBlocks() {
+        toggleVisibility('video-block')
+        toggleVisibility('result-block')
+    }
+
+    function toggleVisibility(id) {
+        const elementStyle = document.getElementById(id).style
+        const currentState = elementStyle.display
+        const newState = currentState === 'none' ? 'block' : 'none'
+        elementStyle.display = newState
+    }
  
 </script>
 </body>
