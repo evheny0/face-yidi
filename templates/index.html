@@ -5,11 +5,6 @@
 <meta content="stuff, to, help, search, engines, not" name="keywords">
 <meta content="What this page is about." name="description">
 <meta content="Display Webcam Stream" name="title">
-<script
-  src="https://code.jquery.com/jquery-3.2.1.min.js"
-  integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
-  crossorigin="anonymous"></script>
-
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
 <title>Я знаю, как тебя зовут</title>
   
@@ -41,10 +36,10 @@ h1 {
 <div class="container h-100">
   <div class="row h-100 justify-content-center align-items-cent">
        
-    <h1 class="text-center"> 
+    <h1 class="col-lg-12 text-center">
         Привет. Это хак лета.
-    </h1> 
-
+    </h1>
+       
     <div id="video-block">    
         <video id="video" width="640" height="480" autoplay></video>
         <div class="row justify-content-center">
@@ -58,7 +53,7 @@ h1 {
             <button id="back" class="btn btn-default btn-lg action-btn">Хочу ещё разок!</button>
         </div>
 
-        <div class="results">
+        <div class="results" id="results" style="display: none">
             <div class="progress">
                 <div class="progress-bar bg-success progress-bar-striped" role="progressbar" aria-valuenow="70" id="name-0"
                 aria-valuemin="0" aria-valuemax="100" style="width:100%">
@@ -117,33 +112,23 @@ h1 {
     });
 
     document.getElementById("back").addEventListener("click", function() {
+        displayImageBox(false);
         toggleBlocks();
     });
 
 
     function sendImage(image){
-        $.ajax({
-            'url'      : URL,
-            'type'     : 'post',
-            'data'     : {'image' : image},
-            'success'  : function(response) {
-                console.log('Successful request');
-            }
-        }).fail(function(xhr, err) {
-            console.error(err);
-        });
-
-        // var formData  = new FormData();
-        // formData.append('image', image)
-        // var myInit = { method: 'GET', body: formData};
-        // fetch(URL, myInit).then(function(response) {
-        //     console.log("ok")
-        //     return response;
-        // }).then(function(myBlob) {
-        //     name.innerHTML = "Volodya"
-        // }).catch(function(error) {
-        //     displayResult(error);
-        // })
+        var formData  = new FormData();
+        formData.append('image', image)
+        var myInit = { method: 'POST', body: formData};
+        fetch(URL, myInit).then(function(response) {
+            console.log("ok")
+            return response;
+        }).then(function(myBlob) {
+            name.innerHTML = "Volodya"
+        }).catch(function(error) {
+            displayResult(error);
+        })
     }
  
     function handleVideo(stream) {
@@ -187,6 +172,12 @@ h1 {
                 i++;
             }
         }
+        displayImageBox(true);
+    }
+
+    function displayImageBox(visible) {
+       const newState = visible ? 'block' : 'none';
+       document.getElementById("results").style.display = newState;
     }
  
 </script>
