@@ -11,10 +11,12 @@ app = Flask("hashleta")
 def processImage():
 	print('request received')
 	try:
-		image = request.form
+		image = request.form.image
 		print(image)
-		filePath = f'./uploaded/{str(uuid.uuid4())}.jpg'
-		image.save(filePath)
+		imageData = base64.decodebytes(image.split(“ “)[1])
+		filePath = f'./uploaded/{str(uuid.uuid4())}.png'
+		with open(filePath, 'wb') as fh:
+			fh.write(imageData)
 		predictions = test_single.testImage(filePath)
 		return predictions
 	except:
