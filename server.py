@@ -13,7 +13,7 @@ def processImage():
 	try:
 		image = request.form.image
 		print(image)
-		imageData = base64.decodebytes(image.split(“ “)[1])
+		imageData = base64.decodebytes(image.split(' ')[1])
 		filePath = f'./uploaded/{str(uuid.uuid4())}.png'
 		with open(filePath, 'wb') as fh:
 			fh.write(imageData)
