@@ -1,6 +1,7 @@
 from flask import Flask
 from flask import request
 from flask import render_template
+from flask import Response
 import uuid
 import base64
 import test_single
@@ -29,7 +30,7 @@ def processImage():
 		result = []
 		for key, value in sorted(predictions.items(), key=lambda item: item[1], reverse=True)[:10]:
 			result.append({ 'name' : key, 'value' : value})
-		return str(result)
+		return new Response(str(result), mimetype='application/json')
 	except:
 		e = sys.exc_info()[0]
 		print(e)
