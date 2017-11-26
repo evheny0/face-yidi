@@ -1,10 +1,10 @@
 from flask import Flask
 from flask import request
-from flask import jsonify
 import uuid
 import base64
 import test_single
 import sys
+import json
 
 app = Flask("hackleta")
 
@@ -22,7 +22,7 @@ def processImage():
 		if not predictions:
 			return "Face not found"
 		print(predictions)
-		return jsonify(predictions)
+		return json.dumps(predictions)
 	except:
 		e = sys.exc_info()[0]
 		print(e)
