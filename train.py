@@ -19,9 +19,9 @@ character_classes = [d for d in dataset.iterdir() if d.is_dir()]
 dataSize = sum(len(list(c.glob('*.png'))) for c in character_classes)
 print(dataSize)
 
-dataSize = 3132
+# dataSize = 3132
 
-# NUM_OF_CLASSES = 58
+NUM_OF_CLASSES = 58
 
 def train():
     model = Sequential()
