@@ -18,6 +18,8 @@ def processImage():
 		with open(filePath, 'wb') as fh:
 			fh.write(imageData)
 		predictions = test_single.testImage(filePath)
+		if not predictions:
+			return "Face not found"
 		print(predictions)
 		return predictions
 	except:
