@@ -39,15 +39,14 @@ def find_faces(filename):
 
   return True
 
-
 def testImage(imagePath):
-  print("Prepare image")
-  if not find_faces(imagePath):
-    return None
+	print("Prepare image")
+	if not find_faces(imagePath):
+		return None
 
 	imageArray = np.array([np.array(Image.open(imagePath))]) * (1.0 / 255.0)
-  predictions = model.predict(imageArray, 1, 1, 1)
-  return predictions
+	predictions = model.predict(imageArray, 1, 1, 1)
+	return predictions
 
 if __name__ == '__main__':
 	test()
