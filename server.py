@@ -11,7 +11,7 @@ app = Flask("hashleta")
 def processImage():
 	print('request received')
 	try:
-		image = request.files['image']
+		image = request.form
 		print(image)
 		filePath = f'./uploaded/{str(uuid.uuid4())}.jpg'
 		image.save(filePath)
